@@ -1,4 +1,5 @@
 const Datastore = require('nedb');
+const path = require('path');
 
 function getUserHome() {
     return __dirname;
@@ -8,7 +9,7 @@ function getUserHome() {
 // const db = new Datastore({filename: getUserHome()+'/.electronapp/crawl/bookrank.db', autoload: true});
 
 const db = {};
-db.bookranks = new Datastore({filename: getUserHome()+'/bookranks.db', autoload: true});
-db.books = new Datastore({filename: getUserHome()+'/books.db', autoload: true});
+db.bookranks = new Datastore({filename: path.join(getUserHome(), '../db/bookranks.db') , autoload: true});
+db.books = new Datastore({filename: path.join( getUserHome(), '../db/books.db'), autoload: true});
 
 module.exports = db;
