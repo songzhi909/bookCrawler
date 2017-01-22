@@ -30,7 +30,19 @@
 			<h2 class="page-header">小说内容</h2>
 		</div>
 		<div class="ibox-content">
-			<div class="list-group"></div>
+			<div class="list-group">
+				<a class="list-group-item mail-item">
+				    <h3 class="list-group-item-heading">{{bookName}}</h3>
+				    <p class="list-group-item-text">{{bookName}}</p>
+				    <hr style="margin:3px">
+				    <p class="list-group-item-text result">{{auther}}</p>
+				    <div>
+				        <span>{{lastUpdate}}</span>
+				        <button type="button" class="btn btn-default btn-xs updateBtn" data-id="{{_id}}" data-url="{{bookUrl}}">更新</button>
+				    </div>
+				</a>
+				
+			</div>
 		</div>
 	</div>
 </div>

@@ -84,23 +84,34 @@ function crawlBooks(url) {
       let $ = cheerio.load(data);
       $('.ro .booklist-item').each(function(index, div) {
 
-        //解析书单
-        let $div = $(div);
-        let bookName = $div.find('.booklist-subject .title a').text();  //书名
         let bookUrl = $div.find('.booklist-subject .title a').attr('href'); //书籍地址
-        let content = $div.find('.booklist-subject .abstract').text();
-        let author = content.split('字数:')[0].split('作者:')[1];
-        let wordNum = parseInt(content.split('字数:')[1].split('最后更新:')[0]);
-        let lastUpdate = content.split('最后更新:')[1] ? content.split('最后更新:')[1].split('推荐指数:')[0] : '';
-        let score = parseInt(content.split('推荐指数:')[1]);
-        // let score = $div.find('.booklist-subject .abstract .num2star i[style="color:#4D7BD61"]').length;
-        let _id = bookUrl.substr(bookUrl.lastIndexOf('/') + 1);
+        crawlUrl(host + bookUrl, (data)=>{
+            let $ = cheerio.load(data);
 
-        let book = new Book(_id, bookName, bookUrl, author, wordNum, lastUpdate, score);
+            //解析书单
+            let $div = $('.sokk-body>div.container>div').find('div.row').eq(0);
+            let bookName = $div.find('div').eq(0).find('span').text();;  //书名
+            let bookPic =  $div.find('div').eq(0).find('img').attr('src');  //书籍图片
+            let content = $div.find('.booklist-subject .abstract').text();
+            let author =  $div.find('div').eq(0).find('.ys-bookmain li a').text();
+            let wordNum = $div.find('div').eq(0).find('.ys-bookmain li').eq(1).text();
+            let lastUpdate = $div.find('div').eq(0).find('.ys-bookmain li').eq(4).text();   //最后更新日期
+            let score = $div.find('.ys-book-averrate span').text().trim();  //平均评分
+            let scorePerson = '';
+            let chapterNum = $div.find('div').eq(0).find('.ys-bookmain li').eq(2).text(); //章节数
+            let lastChapter = $div.find('div').eq(0).find('.ys-bookmain li').eq(5).text();  //最后章节
+            // let score = $div.find('.booklist-subject .abstract .num2star i[style="color:#4D7BD61"]').length;
+            let _id = bookUrl.substr(bookUrl.lastIndexOf('/') + 1);
 
-        //存入数据库  
-        // FileUtil.writeFile(bookRank, __dirname + '/book.txt');
-        db.books.insert(book);
+            let book = new Book(_id, bookName, bookUrl, bookPic, author, wordNum, lastUpdate, score);
+
+            //存入数据库  
+            // FileUtil.writeFile(bookRank, __dirname + '/book.txt');
+            db.books.insert(book);
+
+        });
+
+        
 
       })
 
